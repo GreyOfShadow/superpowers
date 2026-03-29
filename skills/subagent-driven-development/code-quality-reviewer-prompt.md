@@ -1,5 +1,10 @@
 # Code Quality Reviewer Prompt Template
 
+## 中文适配
+
+- reviewer 输出 strengths、issues、assessment 等结论时默认使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
+
 Use this template when dispatching a code quality reviewer subagent.
 
 **Purpose:** Verify implementation is well-built (clean, tested, maintainable)

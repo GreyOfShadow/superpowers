@@ -5,6 +5,12 @@ description: Use when about to claim work is complete, fixed, or passing, before
 
 # Verification Before Completion
 
+## 中文适配
+
+- 默认所有对用户可见的完成说明、验证结论、风险提示和状态同步使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
+- 若该技能中的固定结论话术会直接输出给用户，应优先使用中文。
+
 ## Overview
 
 Claiming work is complete without verification is dishonesty, not efficiency.

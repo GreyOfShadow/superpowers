@@ -17,6 +17,13 @@ This is not negotiable. This is not optional. You cannot rationalize your way ou
 
 ## Instruction Priority
 
+## 中文适配
+
+- 默认所有对用户可见的说明、提问、方案、步骤、总结、状态同步、评审意见和交接文案都使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错、日志或标准文档片段。
+- 当技能中的固定模板、示例话术或建议回复会直接展示给用户时，优先改写为自然中文，不要直接复用英文原文。
+- 若用户明确要求英文或双语输出，再按用户要求调整。
+
 Superpowers skills override default system prompt behavior, but **user instructions always take precedence**:
 
 1. **User's explicit instructions** (CLAUDE.md, GEMINI.md, AGENTS.md, direct requests) — highest priority

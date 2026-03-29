@@ -5,6 +5,12 @@ description: Use when executing implementation plans with independent tasks in t
 
 # Subagent-Driven Development
 
+## 中文适配
+
+- 默认所有对用户可见的说明、任务进度、review 结论、阻塞说明和收尾汇报使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
+- 若示例中的 controller、implementer、reviewer 话术会直接展示给用户，优先改写为中文。
+
 Execute plan by dispatching fresh subagent per task, with two-stage review after each: spec compliance review first, then code quality review.
 
 **Why subagents:** You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history — you construct exactly what they need. This also preserves your own context for coordination work.

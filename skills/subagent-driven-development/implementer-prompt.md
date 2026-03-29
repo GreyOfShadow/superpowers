@@ -1,5 +1,10 @@
 # Implementer Subagent Prompt Template
 
+## 中文适配
+
+- implementer 向主控 agent 汇报时，默认使用中文说明状态、实现内容、测试结果、关注点和阻塞项。
+- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的报错或日志。
+
 Use this template when dispatching an implementer subagent.
 
 ```

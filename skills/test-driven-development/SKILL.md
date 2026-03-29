@@ -5,6 +5,12 @@ description: Use when implementing any feature or bugfix, before writing impleme
 
 # Test-Driven Development (TDD)
 
+## 中文适配
+
+- 默认所有对用户可见的说明、步骤引导、测试结论和状态同步使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
+- 若技能中的固定提醒语或示例汇报会直接给用户看，优先改写为中文。
+
 ## Overview
 
 Write the test first. Watch it fail. Write minimal code to pass.

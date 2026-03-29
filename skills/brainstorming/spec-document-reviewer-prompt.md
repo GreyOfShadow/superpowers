@@ -1,5 +1,10 @@
 # Spec Document Reviewer Prompt Template
 
+## 中文适配
+
+- reviewer 对用户或主控 agent 生成的说明、问题、结论与建议默认使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
+
 Use this template when dispatching a spec document reviewer subagent.
 
 **Purpose:** Verify the spec is complete, consistent, and ready for implementation planning.

@@ -5,13 +5,19 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 
 # Writing Plans
 
+## 中文适配
+
+- 默认所有对用户可见的计划说明、任务拆解说明、交接文案和执行选项使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
+- 技能中的固定开场语、计划完成提示和执行方式选项应优先使用中文。
+
 ## Overview
 
 Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
 
 Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
 
-**Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
+**Announce at start:** "我会使用 writing-plans skill 来编写实施计划。"
 
 **Context:** This should be run in a dedicated worktree (created by brainstorming skill).
 
@@ -135,13 +141,13 @@ If you find issues, fix them inline. No need to re-review — just fix and move 
 
 After saving the plan, offer execution choice:
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
+**"计划已完成，并保存到 `docs/superpowers/plans/<filename>.md`。接下来有两种执行方式：**
 
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
+**1. Subagent-Driven（推荐）** - 我会为每个任务分派新的 subagent，并在任务之间做 review，迭代更快
 
-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
+**2. Inline Execution** - 我会在当前会话里使用 executing-plans 执行任务，按批次推进并设置检查点
 
-**Which approach?"**
+**你想采用哪一种方式？"**
 
 **If Subagent-Driven chosen:**
 - **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development

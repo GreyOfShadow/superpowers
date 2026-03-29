@@ -5,13 +5,19 @@ description: Use when starting feature work that needs isolation from current wo
 
 # Using Git Worktrees
 
+## 中文适配
+
+- 默认所有对用户可见的说明、提问、风险提示、状态汇报和收尾文案使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
+- 该技能中的固定提问、准备完成提示和示例汇报应优先使用自然中文。
+
 ## Overview
 
 Git worktrees create isolated workspaces sharing the same repository, allowing work on multiple branches simultaneously without switching.
 
 **Core principle:** Systematic directory selection + safety verification = reliable isolation.
 
-**Announce at start:** "I'm using the using-git-worktrees skill to set up an isolated workspace."
+**Announce at start:** "我会使用 using-git-worktrees skill 来准备隔离的工作区。"
 
 ## Directory Selection Process
 
@@ -40,12 +46,12 @@ grep -i "worktree.*director" CLAUDE.md 2>/dev/null
 If no directory exists and no CLAUDE.md preference:
 
 ```
-No worktree directory found. Where should I create worktrees?
+没有找到现成的 worktree 目录。你希望我把 worktree 创建在哪里？
 
 1. .worktrees/ (project-local, hidden)
 2. ~/.config/superpowers/worktrees/<project-name>/ (global location)
 
-Which would you prefer?
+你更倾向哪一种？
 ```
 
 ## Safety Verification
@@ -136,9 +142,9 @@ go test ./...
 ### 5. Report Location
 
 ```
-Worktree ready at <full-path>
-Tests passing (<N> tests, 0 failures)
-Ready to implement <feature-name>
+Worktree 已就绪：`<full-path>`
+测试通过（`<N>` 项测试，`0` 项失败）
+可以开始实现 `<feature-name>`
 ```
 
 ## Quick Reference
@@ -178,7 +184,7 @@ Ready to implement <feature-name>
 ## Example Workflow
 
 ```
-You: I'm using the using-git-worktrees skill to set up an isolated workspace.
+You: 我会使用 using-git-worktrees skill 来准备隔离的工作区。
 
 [Check .worktrees/ - exists]
 [Verify ignored - git check-ignore confirms .worktrees/ is ignored]
@@ -186,9 +192,9 @@ You: I'm using the using-git-worktrees skill to set up an isolated workspace.
 [Run npm install]
 [Run npm test - 47 passing]
 
-Worktree ready at /Users/jesse/myproject/.worktrees/auth
-Tests passing (47 tests, 0 failures)
-Ready to implement auth feature
+Worktree 已就绪：/Users/jesse/myproject/.worktrees/auth
+测试通过（47 项测试，0 项失败）
+可以开始实现 auth 功能
 ```
 
 ## Red Flags

@@ -1,0 +1,626 @@
+diff --git a/skills/brainstorming/SKILL.md b/skills/brainstorming/SKILL.md
+index 06cd0a2..794d96d 100644
+--- a/skills/brainstorming/SKILL.md
++++ b/skills/brainstorming/SKILL.md
+@@ -5,6 +5,13 @@ description: "You MUST use this before any creative work - creating features, bu
+ 
+ # Brainstorming Ideas Into Designs
+ 
++## 中文适配
++
++- 默认所有对用户可见的提问、设计说明、方案比较、审批确认、总结和状态同步使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错、日志或标准片段。
++- 技能中的固定提示语、审批文案和可视化 companion 邀请语应优先使用自然中文。
++- 若用户明确要求英文或双语，再按要求调整。
++
+ Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
+ 
+ Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
+@@ -126,7 +133,7 @@ Fix any issues inline. No need to re-review — just fix and move on.
+ **User Review Gate:**
+ After the spec review loop passes, ask the user to review the written spec before proceeding:
+ 
+-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
++> "规格说明已写入并提交到 `<path>`。请先看一下，如果你希望调整内容，我会先修改，再继续编写实施计划。"
+ 
+ Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+ 
+@@ -149,7 +156,7 @@ Wait for the user's response. If they request changes, make them and re-run the
+ A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool — not a mode. Accepting the companion means it's available for questions that benefit from visual treatment; it does NOT mean every question goes through the browser.
+ 
+ **Offering the companion:** When you anticipate that upcoming questions will involve visual content (mockups, layouts, diagrams), offer it once for consent:
+-> "Some of what we're working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? (Requires opening a local URL)"
++> "接下来有些内容如果能直接在浏览器里展示，可能会更容易沟通。我可以一边推进一边给你做草图、结构图、对比图和其他可视化内容。这个功能还比较新，而且会额外消耗一些 token。要试试吗？（需要打开一个本地 URL）"
+ 
+ **This offer MUST be its own message.** Do not combine it with clarifying questions, context summaries, or any other content. The message should contain ONLY the offer above and nothing else. Wait for the user's response before continuing. If they decline, proceed with text-only brainstorming.
+ 
+diff --git a/skills/brainstorming/scripts/frame-template.html b/skills/brainstorming/scripts/frame-template.html
+index dcfe018..0170219 100644
+--- a/skills/brainstorming/scripts/frame-template.html
++++ b/skills/brainstorming/scripts/frame-template.html
+@@ -2,7 +2,7 @@
+ <html>
+ <head>
+   <meta charset="utf-8">
+-  <title>Superpowers Brainstorming</title>
++  <title>Superpowers 头脑风暴</title>
+   <style>
+     /*
+      * BRAINSTORM COMPANION FRAME TEMPLATE
+@@ -196,8 +196,8 @@
+ </head>
+ <body>
+   <div class="header">
+-    <h1><a href="https://github.com/obra/superpowers" style="color: inherit; text-decoration: none;">Superpowers Brainstorming</a></h1>
+-    <div class="status">Connected</div>
++    <h1><a href="https://github.com/obra/superpowers" style="color: inherit; text-decoration: none;">Superpowers 头脑风暴</a></h1>
++    <div class="status">已连接</div>
+   </div>
+ 
+   <div class="main">
+@@ -207,7 +207,7 @@
+   </div>
+ 
+   <div class="indicator-bar">
+-    <span id="indicator-text">Click an option above, then return to the terminal</span>
++    <span id="indicator-text">点击上方选项后，回到终端继续</span>
+   </div>
+ 
+ </body>
+diff --git a/skills/brainstorming/scripts/helper.js b/skills/brainstorming/scripts/helper.js
+index 111f97f..4b65b47 100644
+--- a/skills/brainstorming/scripts/helper.js
++++ b/skills/brainstorming/scripts/helper.js
+@@ -51,12 +51,12 @@
+       const container = target.closest('.options') || target.closest('.cards');
+       const selected = container ? container.querySelectorAll('.selected') : [];
+       if (selected.length === 0) {
+-        indicator.textContent = 'Click an option above, then return to the terminal';
++        indicator.textContent = '点击上方选项后，回到终端继续';
+       } else if (selected.length === 1) {
+         const label = selected[0].querySelector('h3, .content h3, .card-body h3')?.textContent?.trim() || selected[0].dataset.choice;
+-        indicator.innerHTML = '<span class="selected-text">' + label + ' selected</span> — return to terminal to continue';
++        indicator.innerHTML = '<span class="selected-text">已选择：' + label + '</span>，回到终端继续';
+       } else {
+-        indicator.innerHTML = '<span class="selected-text">' + selected.length + ' selected</span> — return to terminal to continue';
++        indicator.innerHTML = '<span class="selected-text">已选择 ' + selected.length + ' 项</span>，回到终端继续';
+       }
+     }, 0);
+   });
+diff --git a/skills/brainstorming/scripts/server.cjs b/skills/brainstorming/scripts/server.cjs
+index 562c17f..625cd44 100644
+--- a/skills/brainstorming/scripts/server.cjs
++++ b/skills/brainstorming/scripts/server.cjs
+@@ -91,12 +91,12 @@ const MIME_TYPES = {
+ 
+ const WAITING_PAGE = `<!DOCTYPE html>
+ <html>
+-<head><meta charset="utf-8"><title>Brainstorm Companion</title>
++<head><meta charset="utf-8"><title>头脑风暴助手</title>
+ <style>body { font-family: system-ui, sans-serif; padding: 2rem; max-width: 800px; margin: 0 auto; }
+ h1 { color: #333; } p { color: #666; }</style>
+ </head>
+-<body><h1>Brainstorm Companion</h1>
+-<p>Waiting for the agent to push a screen...</p></body></html>`;
++<body><h1>头脑风暴助手</h1>
++<p>正在等待 agent 推送新的页面...</p></body></html>`;
+ 
+ const frameTemplate = fs.readFileSync(path.join(__dirname, 'frame-template.html'), 'utf-8');
+ const helperScript = fs.readFileSync(path.join(__dirname, 'helper.js'), 'utf-8');
+diff --git a/skills/brainstorming/spec-document-reviewer-prompt.md b/skills/brainstorming/spec-document-reviewer-prompt.md
+index 35acbb6..7a6d1f4 100644
+--- a/skills/brainstorming/spec-document-reviewer-prompt.md
++++ b/skills/brainstorming/spec-document-reviewer-prompt.md
+@@ -1,5 +1,10 @@
+ # Spec Document Reviewer Prompt Template
+ 
++## 中文适配
++
++- reviewer 对用户或主控 agent 生成的说明、问题、结论与建议默认使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
++
+ Use this template when dispatching a spec document reviewer subagent.
+ 
+ **Purpose:** Verify the spec is complete, consistent, and ready for implementation planning.
+diff --git a/skills/brainstorming/visual-companion.md b/skills/brainstorming/visual-companion.md
+index 2113863..afdab5e 100644
+--- a/skills/brainstorming/visual-companion.md
++++ b/skills/brainstorming/visual-companion.md
+@@ -1,5 +1,11 @@
+ # Visual Companion Guide
+ 
++## 中文适配
++
++- 默认所有对用户可见的说明、引导文案、页面标题、按钮提示和总结使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
++- 若本文件中的模板或示例会直接展示给用户，优先写成自然中文。
++
+ Browser-based visual brainstorming companion for showing mockups, diagrams, and options.
+ 
+ ## When to Use
+diff --git a/skills/dispatching-parallel-agents/SKILL.md b/skills/dispatching-parallel-agents/SKILL.md
+index a6a3f5a..097f832 100644
+--- a/skills/dispatching-parallel-agents/SKILL.md
++++ b/skills/dispatching-parallel-agents/SKILL.md
+@@ -5,6 +5,12 @@ description: Use when facing 2+ independent tasks that can be worked on without
+ 
+ # Dispatching Parallel Agents
+ 
++## 中文适配
++
++- 默认所有对用户可见的说明、分析、分工建议、结果汇总和状态同步使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
++- 若示例中的固定回复会直接展示给用户，应优先改写为中文。
++
+ ## Overview
+ 
+ You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history — you construct exactly what they need. This also preserves your own context for coordination work.
+diff --git a/skills/executing-plans/SKILL.md b/skills/executing-plans/SKILL.md
+index e67f94c..5da30eb 100644
+--- a/skills/executing-plans/SKILL.md
++++ b/skills/executing-plans/SKILL.md
+@@ -5,11 +5,17 @@ description: Use when you have a written implementation plan to execute in a sep
+ 
+ # Executing Plans
+ 
++## 中文适配
++
++- 默认所有对用户可见的说明、执行进度、阻塞反馈、求助文案和收尾说明使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
++- 技能中的固定开场语和切换到后续技能时的提示语应优先使用中文。
++
+ ## Overview
+ 
+ Load plan, review critically, execute all tasks, report when complete.
+ 
+-**Announce at start:** "I'm using the executing-plans skill to implement this plan."
++**Announce at start:** "我会使用 executing-plans skill 来执行这份计划。"
+ 
+ **Note:** Tell your human partner that Superpowers works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use superpowers:subagent-driven-development instead of this skill.
+ 
+@@ -32,7 +38,7 @@ For each task:
+ ### Step 3: Complete Development
+ 
+ After all tasks complete and verified:
+-- Announce: "I'm using the finishing-a-development-branch skill to complete this work."
++- Announce: "我会使用 finishing-a-development-branch skill 来完成这次开发收尾。"
+ - **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch
+ - Follow that skill to verify tests, present options, execute choice
+ 
+diff --git a/skills/finishing-a-development-branch/SKILL.md b/skills/finishing-a-development-branch/SKILL.md
+index c308b43..a0c88a1 100644
+--- a/skills/finishing-a-development-branch/SKILL.md
++++ b/skills/finishing-a-development-branch/SKILL.md
+@@ -5,13 +5,19 @@ description: Use when implementation is complete, all tests pass, and you need t
+ 
+ # Finishing a Development Branch
+ 
++## 中文适配
++
++- 默认所有对用户可见的说明、选项菜单、确认提示、风险提醒和收尾汇报使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错、日志或标准片段。
++- 该技能中的固定菜单、确认文案和汇报语句应优先使用自然中文。
++
+ ## Overview
+ 
+ Guide completion of development work by presenting clear options and handling chosen workflow.
+ 
+ **Core principle:** Verify tests → Present options → Execute choice → Clean up.
+ 
+-**Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
++**Announce at start:** "我会使用 finishing-a-development-branch skill 来完成这次开发收尾。"
+ 
+ ## The Process
+ 
+@@ -26,11 +32,11 @@ npm test / cargo test / pytest / go test ./...
+ 
+ **If tests fail:**
+ ```
+-Tests failing (<N> failures). Must fix before completing:
++测试未通过（共 `<N>` 项失败），必须先修复再进入收尾流程：
+ 
+ [Show failures]
+ 
+-Cannot proceed with merge/PR until tests pass.
++在测试通过之前，不能继续执行 merge 或创建 PR。
+ ```
+ 
+ Stop. Don't proceed to Step 2.
+@@ -44,21 +50,21 @@ Stop. Don't proceed to Step 2.
+ git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
+ ```
+ 
+-Or ask: "This branch split from main - is that correct?"
++Or ask: "这个分支是从 main 切出来的吗？如果不是，请告诉我正确的基线分支。"
+ 
+ ### Step 3: Present Options
+ 
+ Present exactly these 4 options:
+ 
+ ```
+-Implementation complete. What would you like to do?
++实现已完成。你希望接下来怎么处理？
+ 
+-1. Merge back to <base-branch> locally
+-2. Push and create a Pull Request
+-3. Keep the branch as-is (I'll handle it later)
+-4. Discard this work
++1. 本地合并回 `<base-branch>`
++2. 推送分支并创建 Pull Request
++3. 保留当前分支（稍后再处理）
++4. 丢弃这次改动
+ 
+-Which option?
++请选择一个选项。
+ ```
+ 
+ **Don't add explanation** - keep options concise.
+@@ -107,7 +113,7 @@ Then: Cleanup worktree (Step 5)
+ 
+ #### Option 3: Keep As-Is
+ 
+-Report: "Keeping branch <name>. Worktree preserved at <path>."
++Report: "已保留分支 `<name>`，worktree 仍在 `<path>`。"
+ 
+ **Don't cleanup worktree.**
+ 
+@@ -115,12 +121,12 @@ Report: "Keeping branch <name>. Worktree preserved at <path>."
+ 
+ **Confirm first:**
+ ```
+-This will permanently delete:
++这会永久删除：
+ - Branch <name>
+ - All commits: <commit-list>
+ - Worktree at <path>
+ 
+-Type 'discard' to confirm.
++请输入 `discard` 以确认。
+ ```
+ 
+ Wait for exact confirmation.
+diff --git a/skills/receiving-code-review/SKILL.md b/skills/receiving-code-review/SKILL.md
+index 4ea72cd..74a7c6a 100644
+--- a/skills/receiving-code-review/SKILL.md
++++ b/skills/receiving-code-review/SKILL.md
+@@ -5,6 +5,12 @@ description: Use when receiving code review feedback, before implementing sugges
+ 
+ # Code Review Reception
+ 
++## 中文适配
++
++- 默认所有对用户可见的澄清、技术回应、反驳说明、修复汇报和结论使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错、日志或标准片段。
++- 若示例回复会直接给用户看，优先改写为中文。
++
+ ## Overview
+ 
+ Code review requires technical evaluation, not emotional performance.
+diff --git a/skills/requesting-code-review/SKILL.md b/skills/requesting-code-review/SKILL.md
+index fe7c8d9..fd8fd52 100644
+--- a/skills/requesting-code-review/SKILL.md
++++ b/skills/requesting-code-review/SKILL.md
+@@ -5,6 +5,12 @@ description: Use when completing tasks, implementing major features, or before m
+ 
+ # Requesting Code Review
+ 
++## 中文适配
++
++- 默认所有对用户可见的说明、review 请求说明、反馈摘要和修复结论使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
++- 若技能中的固定提示语或示例对话会直接展示给用户，应优先使用中文。
++
+ Dispatch superpowers:code-reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.
+ 
+ **Core principle:** Review early, review often.
+diff --git a/skills/requesting-code-review/code-reviewer.md b/skills/requesting-code-review/code-reviewer.md
+index 3c427c9..061c52c 100644
+--- a/skills/requesting-code-review/code-reviewer.md
++++ b/skills/requesting-code-review/code-reviewer.md
+@@ -1,5 +1,10 @@
+ # Code Review Agent
+ 
++## 中文适配
++
++- review 结果、问题说明、严重级别判断和整改建议默认使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
++
+ You are reviewing code changes for production readiness.
+ 
+ **Your task:**
+diff --git a/skills/subagent-driven-development/SKILL.md b/skills/subagent-driven-development/SKILL.md
+index 5150b18..2d04c26 100644
+--- a/skills/subagent-driven-development/SKILL.md
++++ b/skills/subagent-driven-development/SKILL.md
+@@ -5,6 +5,12 @@ description: Use when executing implementation plans with independent tasks in t
+ 
+ # Subagent-Driven Development
+ 
++## 中文适配
++
++- 默认所有对用户可见的说明、任务进度、review 结论、阻塞说明和收尾汇报使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
++- 若示例中的 controller、implementer、reviewer 话术会直接展示给用户，优先改写为中文。
++
+ Execute plan by dispatching fresh subagent per task, with two-stage review after each: spec compliance review first, then code quality review.
+ 
+ **Why subagents:** You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history — you construct exactly what they need. This also preserves your own context for coordination work.
+diff --git a/skills/subagent-driven-development/code-quality-reviewer-prompt.md b/skills/subagent-driven-development/code-quality-reviewer-prompt.md
+index a04201a..eb27285 100644
+--- a/skills/subagent-driven-development/code-quality-reviewer-prompt.md
++++ b/skills/subagent-driven-development/code-quality-reviewer-prompt.md
+@@ -1,5 +1,10 @@
+ # Code Quality Reviewer Prompt Template
+ 
++## 中文适配
++
++- reviewer 输出 strengths、issues、assessment 等结论时默认使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
++
+ Use this template when dispatching a code quality reviewer subagent.
+ 
+ **Purpose:** Verify implementation is well-built (clean, tested, maintainable)
+diff --git a/skills/subagent-driven-development/implementer-prompt.md b/skills/subagent-driven-development/implementer-prompt.md
+index 400c103..1d62162 100644
+--- a/skills/subagent-driven-development/implementer-prompt.md
++++ b/skills/subagent-driven-development/implementer-prompt.md
+@@ -1,5 +1,10 @@
+ # Implementer Subagent Prompt Template
+ 
++## 中文适配
++
++- implementer 向主控 agent 汇报时，默认使用中文说明状态、实现内容、测试结果、关注点和阻塞项。
++- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的报错或日志。
++
+ Use this template when dispatching an implementer subagent.
+ 
+ ```
+diff --git a/skills/subagent-driven-development/spec-reviewer-prompt.md b/skills/subagent-driven-development/spec-reviewer-prompt.md
+index ab5ddb8..e94770b 100644
+--- a/skills/subagent-driven-development/spec-reviewer-prompt.md
++++ b/skills/subagent-driven-development/spec-reviewer-prompt.md
+@@ -1,5 +1,10 @@
+ # Spec Compliance Reviewer Prompt Template
+ 
++## 中文适配
++
++- reviewer 输出 spec compliance 结论、问题和建议时默认使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
++
+ Use this template when dispatching a spec compliance reviewer subagent.
+ 
+ **Purpose:** Verify implementer built what was requested (nothing more, nothing less)
+diff --git a/skills/systematic-debugging/SKILL.md b/skills/systematic-debugging/SKILL.md
+index 111d2a9..810cd24 100644
+--- a/skills/systematic-debugging/SKILL.md
++++ b/skills/systematic-debugging/SKILL.md
+@@ -5,6 +5,12 @@ description: Use when encountering any bug, test failure, or unexpected behavior
+ 
+ # Systematic Debugging
+ 
++## 中文适配
++
++- 默认所有对用户可见的问题分析、排查结论、证据说明、风险提示和修复建议使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错、日志或标准片段。
++- 若技能中的固定提问或总结模板会直接展示给用户，应优先使用中文。
++
+ ## Overview
+ 
+ Random fixes waste time and create new bugs. Quick patches mask underlying issues.
+diff --git a/skills/test-driven-development/SKILL.md b/skills/test-driven-development/SKILL.md
+index 7a751fa..ca35621 100644
+--- a/skills/test-driven-development/SKILL.md
++++ b/skills/test-driven-development/SKILL.md
+@@ -5,6 +5,12 @@ description: Use when implementing any feature or bugfix, before writing impleme
+ 
+ # Test-Driven Development (TDD)
+ 
++## 中文适配
++
++- 默认所有对用户可见的说明、步骤引导、测试结论和状态同步使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
++- 若技能中的固定提醒语或示例汇报会直接给用户看，优先改写为中文。
++
+ ## Overview
+ 
+ Write the test first. Watch it fail. Write minimal code to pass.
+diff --git a/skills/using-git-worktrees/SKILL.md b/skills/using-git-worktrees/SKILL.md
+index e153843..2d4d8a4 100644
+--- a/skills/using-git-worktrees/SKILL.md
++++ b/skills/using-git-worktrees/SKILL.md
+@@ -5,13 +5,19 @@ description: Use when starting feature work that needs isolation from current wo
+ 
+ # Using Git Worktrees
+ 
++## 中文适配
++
++- 默认所有对用户可见的说明、提问、风险提示、状态汇报和收尾文案使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
++- 该技能中的固定提问、准备完成提示和示例汇报应优先使用自然中文。
++
+ ## Overview
+ 
+ Git worktrees create isolated workspaces sharing the same repository, allowing work on multiple branches simultaneously without switching.
+ 
+ **Core principle:** Systematic directory selection + safety verification = reliable isolation.
+ 
+-**Announce at start:** "I'm using the using-git-worktrees skill to set up an isolated workspace."
++**Announce at start:** "我会使用 using-git-worktrees skill 来准备隔离的工作区。"
+ 
+ ## Directory Selection Process
+ 
+@@ -40,12 +46,12 @@ grep -i "worktree.*director" CLAUDE.md 2>/dev/null
+ If no directory exists and no CLAUDE.md preference:
+ 
+ ```
+-No worktree directory found. Where should I create worktrees?
++没有找到现成的 worktree 目录。你希望我把 worktree 创建在哪里？
+ 
+ 1. .worktrees/ (project-local, hidden)
+ 2. ~/.config/superpowers/worktrees/<project-name>/ (global location)
+ 
+-Which would you prefer?
++你更倾向哪一种？
+ ```
+ 
+ ## Safety Verification
+@@ -136,9 +142,9 @@ go test ./...
+ ### 5. Report Location
+ 
+ ```
+-Worktree ready at <full-path>
+-Tests passing (<N> tests, 0 failures)
+-Ready to implement <feature-name>
++Worktree 已就绪：`<full-path>`
++测试通过（`<N>` 项测试，`0` 项失败）
++可以开始实现 `<feature-name>`
+ ```
+ 
+ ## Quick Reference
+@@ -178,7 +184,7 @@ Ready to implement <feature-name>
+ ## Example Workflow
+ 
+ ```
+-You: I'm using the using-git-worktrees skill to set up an isolated workspace.
++You: 我会使用 using-git-worktrees skill 来准备隔离的工作区。
+ 
+ [Check .worktrees/ - exists]
+ [Verify ignored - git check-ignore confirms .worktrees/ is ignored]
+@@ -186,9 +192,9 @@ You: I'm using the using-git-worktrees skill to set up an isolated workspace.
+ [Run npm install]
+ [Run npm test - 47 passing]
+ 
+-Worktree ready at /Users/jesse/myproject/.worktrees/auth
+-Tests passing (47 tests, 0 failures)
+-Ready to implement auth feature
++Worktree 已就绪：/Users/jesse/myproject/.worktrees/auth
++测试通过（47 项测试，0 项失败）
++可以开始实现 auth 功能
+ ```
+ 
+ ## Red Flags
+diff --git a/skills/using-superpowers/SKILL.md b/skills/using-superpowers/SKILL.md
+index d813535..4c93281 100644
+--- a/skills/using-superpowers/SKILL.md
++++ b/skills/using-superpowers/SKILL.md
+@@ -17,6 +17,13 @@ This is not negotiable. This is not optional. You cannot rationalize your way ou
+ 
+ ## Instruction Priority
+ 
++## 中文适配
++
++- 默认所有对用户可见的说明、提问、方案、步骤、总结、状态同步、评审意见和交接文案都使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错、日志或标准文档片段。
++- 当技能中的固定模板、示例话术或建议回复会直接展示给用户时，优先改写为自然中文，不要直接复用英文原文。
++- 若用户明确要求英文或双语输出，再按用户要求调整。
++
+ Superpowers skills override default system prompt behavior, but **user instructions always take precedence**:
+ 
+ 1. **User's explicit instructions** (CLAUDE.md, GEMINI.md, AGENTS.md, direct requests) — highest priority
+diff --git a/skills/using-superpowers/references/codex-tools.md b/skills/using-superpowers/references/codex-tools.md
+index 539b2b1..d25c65c 100644
+--- a/skills/using-superpowers/references/codex-tools.md
++++ b/skills/using-superpowers/references/codex-tools.md
+@@ -1,5 +1,10 @@
+ # Codex Tool Mapping
+ 
++## 中文适配
++
++- 当本参考中的说明会被转述给用户时，默认使用中文表达。
++- 保留英文用于工具名、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
++
+ Skills use Claude Code tool names. When you encounter these in a skill, use your platform equivalent:
+ 
+ | Skill references | Codex equivalent |
+diff --git a/skills/verification-before-completion/SKILL.md b/skills/verification-before-completion/SKILL.md
+index 2f14076..d0e9380 100644
+--- a/skills/verification-before-completion/SKILL.md
++++ b/skills/verification-before-completion/SKILL.md
+@@ -5,6 +5,12 @@ description: Use when about to claim work is complete, fixed, or passing, before
+ 
+ # Verification Before Completion
+ 
++## 中文适配
++
++- 默认所有对用户可见的完成说明、验证结论、风险提示和状态同步使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
++- 若该技能中的固定结论话术会直接输出给用户，应优先使用中文。
++
+ ## Overview
+ 
+ Claiming work is complete without verification is dishonesty, not efficiency.
+diff --git a/skills/writing-plans/SKILL.md b/skills/writing-plans/SKILL.md
+index 0d9c00b..b4a92fd 100644
+--- a/skills/writing-plans/SKILL.md
++++ b/skills/writing-plans/SKILL.md
+@@ -5,13 +5,19 @@ description: Use when you have a spec or requirements for a multi-step task, bef
+ 
+ # Writing Plans
+ 
++## 中文适配
++
++- 默认所有对用户可见的计划说明、任务拆解说明、交接文案和执行选项使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
++- 技能中的固定开场语、计划完成提示和执行方式选项应优先使用中文。
++
+ ## Overview
+ 
+ Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
+ 
+ Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
+ 
+-**Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
++**Announce at start:** "我会使用 writing-plans skill 来编写实施计划。"
+ 
+ **Context:** This should be run in a dedicated worktree (created by brainstorming skill).
+ 
+@@ -135,13 +141,13 @@ If you find issues, fix them inline. No need to re-review — just fix and move
+ 
+ After saving the plan, offer execution choice:
+ 
+-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
++**"计划已完成，并保存到 `docs/superpowers/plans/<filename>.md`。接下来有两种执行方式：**
+ 
+-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
++**1. Subagent-Driven（推荐）** - 我会为每个任务分派新的 subagent，并在任务之间做 review，迭代更快
+ 
+-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
++**2. Inline Execution** - 我会在当前会话里使用 executing-plans 执行任务，按批次推进并设置检查点
+ 
+-**Which approach?"**
++**你想采用哪一种方式？"**
+ 
+ **If Subagent-Driven chosen:**
+ - **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
+diff --git a/skills/writing-plans/plan-document-reviewer-prompt.md b/skills/writing-plans/plan-document-reviewer-prompt.md
+index 2db2806..6fa767a 100644
+--- a/skills/writing-plans/plan-document-reviewer-prompt.md
++++ b/skills/writing-plans/plan-document-reviewer-prompt.md
+@@ -1,5 +1,10 @@
+ # Plan Document Reviewer Prompt Template
+ 
++## 中文适配
++
++- reviewer 输出的状态、问题、建议和摘要默认使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
++
+ Use this template when dispatching a plan document reviewer subagent.
+ 
+ **Purpose:** Verify the plan is complete, matches the spec, and has proper task decomposition.
+diff --git a/skills/writing-skills/SKILL.md b/skills/writing-skills/SKILL.md
+index c3b73d8..691f252 100644
+--- a/skills/writing-skills/SKILL.md
++++ b/skills/writing-skills/SKILL.md
+@@ -5,6 +5,12 @@ description: Use when creating new skills, editing existing skills, or verifying
+ 
+ # Writing Skills
+ 
++## 中文适配
++
++- 默认所有对用户可见的技能设计说明、建议、评审意见和交付说明使用中文。
++- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
++- 若该技能中的模板或固定指导语会直接展示给用户，优先改写为中文。
++
+ ## Overview
+ 
+ **Writing skills IS Test-Driven Development applied to process documentation.**

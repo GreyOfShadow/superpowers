@@ -5,6 +5,12 @@ description: Use when completing tasks, implementing major features, or before m
 
 # Requesting Code Review
 
+## 中文适配
+
+- 默认所有对用户可见的说明、review 请求说明、反馈摘要和修复结论使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
+- 若技能中的固定提示语或示例对话会直接展示给用户，应优先使用中文。
+
 Dispatch superpowers:code-reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.
 
 **Core principle:** Review early, review often.

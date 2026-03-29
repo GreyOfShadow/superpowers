@@ -5,6 +5,12 @@ description: Use when receiving code review feedback, before implementing sugges
 
 # Code Review Reception
 
+## 中文适配
+
+- 默认所有对用户可见的澄清、技术回应、反驳说明、修复汇报和结论使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错、日志或标准片段。
+- 若示例回复会直接给用户看，优先改写为中文。
+
 ## Overview
 
 Code review requires technical evaluation, not emotional performance.

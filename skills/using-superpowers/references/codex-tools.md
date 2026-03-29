@@ -1,5 +1,10 @@
 # Codex Tool Mapping
 
+## 中文适配
+
+- 当本参考中的说明会被转述给用户时，默认使用中文表达。
+- 保留英文用于工具名、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
+
 Skills use Claude Code tool names. When you encounter these in a skill, use your platform equivalent:
 
 | Skill references | Codex equivalent |

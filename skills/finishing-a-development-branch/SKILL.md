@@ -5,13 +5,19 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 # Finishing a Development Branch
 
+## 中文适配
+
+- 默认所有对用户可见的说明、选项菜单、确认提示、风险提醒和收尾汇报使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错、日志或标准片段。
+- 该技能中的固定菜单、确认文案和汇报语句应优先使用自然中文。
+
 ## Overview
 
 Guide completion of development work by presenting clear options and handling chosen workflow.
 
 **Core principle:** Verify tests → Present options → Execute choice → Clean up.
 
-**Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
+**Announce at start:** "我会使用 finishing-a-development-branch skill 来完成这次开发收尾。"
 
 ## The Process
 
@@ -26,11 +32,11 @@ npm test / cargo test / pytest / go test ./...
 
 **If tests fail:**
 ```
-Tests failing (<N> failures). Must fix before completing:
+测试未通过（共 `<N>` 项失败），必须先修复再进入收尾流程：
 
 [Show failures]
 
-Cannot proceed with merge/PR until tests pass.
+在测试通过之前，不能继续执行 merge 或创建 PR。
 ```
 
 Stop. Don't proceed to Step 2.
@@ -44,21 +50,21 @@ Stop. Don't proceed to Step 2.
 git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
 ```
 
-Or ask: "This branch split from main - is that correct?"
+Or ask: "这个分支是从 main 切出来的吗？如果不是，请告诉我正确的基线分支。"
 
 ### Step 3: Present Options
 
 Present exactly these 4 options:
 
 ```
-Implementation complete. What would you like to do?
+实现已完成。你希望接下来怎么处理？
 
-1. Merge back to <base-branch> locally
-2. Push and create a Pull Request
-3. Keep the branch as-is (I'll handle it later)
-4. Discard this work
+1. 本地合并回 `<base-branch>`
+2. 推送分支并创建 Pull Request
+3. 保留当前分支（稍后再处理）
+4. 丢弃这次改动
 
-Which option?
+请选择一个选项。
 ```
 
 **Don't add explanation** - keep options concise.
@@ -107,7 +113,7 @@ Then: Cleanup worktree (Step 5)
 
 #### Option 3: Keep As-Is
 
-Report: "Keeping branch <name>. Worktree preserved at <path>."
+Report: "已保留分支 `<name>`，worktree 仍在 `<path>`。"
 
 **Don't cleanup worktree.**
 
@@ -115,12 +121,12 @@ Report: "Keeping branch <name>. Worktree preserved at <path>."
 
 **Confirm first:**
 ```
-This will permanently delete:
+这会永久删除：
 - Branch <name>
 - All commits: <commit-list>
 - Worktree at <path>
 
-Type 'discard' to confirm.
+请输入 `discard` 以确认。
 ```
 
 Wait for exact confirmation.

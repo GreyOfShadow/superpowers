@@ -1,5 +1,10 @@
 # Plan Document Reviewer Prompt Template
 
+## 中文适配
+
+- reviewer 输出的状态、问题、建议和摘要默认使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
+
 Use this template when dispatching a plan document reviewer subagent.
 
 **Purpose:** Verify the plan is complete, matches the spec, and has proper task decomposition.

@@ -5,11 +5,17 @@ description: Use when you have a written implementation plan to execute in a sep
 
 # Executing Plans
 
+## 中文适配
+
+- 默认所有对用户可见的说明、执行进度、阻塞反馈、求助文案和收尾说明使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
+- 技能中的固定开场语和切换到后续技能时的提示语应优先使用中文。
+
 ## Overview
 
 Load plan, review critically, execute all tasks, report when complete.
 
-**Announce at start:** "I'm using the executing-plans skill to implement this plan."
+**Announce at start:** "我会使用 executing-plans skill 来执行这份计划。"
 
 **Note:** Tell your human partner that Superpowers works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use superpowers:subagent-driven-development instead of this skill.
 
@@ -32,7 +38,7 @@ For each task:
 ### Step 3: Complete Development
 
 After all tasks complete and verified:
-- Announce: "I'm using the finishing-a-development-branch skill to complete this work."
+- Announce: "我会使用 finishing-a-development-branch skill 来完成这次开发收尾。"
 - **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch
 - Follow that skill to verify tests, present options, execute choice
 

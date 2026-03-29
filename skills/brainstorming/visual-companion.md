@@ -1,5 +1,11 @@
 # Visual Companion Guide
 
+## 中文适配
+
+- 默认所有对用户可见的说明、引导文案、页面标题、按钮提示和总结使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名和必须原样保留的技术片段。
+- 若本文件中的模板或示例会直接展示给用户，优先写成自然中文。
+
 Browser-based visual brainstorming companion for showing mockups, diagrams, and options.
 
 ## When to Use

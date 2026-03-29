@@ -5,6 +5,12 @@ description: Use when encountering any bug, test failure, or unexpected behavior
 
 # Systematic Debugging
 
+## 中文适配
+
+- 默认所有对用户可见的问题分析、排查结论、证据说明、风险提示和修复建议使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错、日志或标准片段。
+- 若技能中的固定提问或总结模板会直接展示给用户，应优先使用中文。
+
 ## Overview
 
 Random fixes waste time and create new bugs. Quick patches mask underlying issues.

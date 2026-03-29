@@ -5,6 +5,12 @@ description: Use when creating new skills, editing existing skills, or verifying
 
 # Writing Skills
 
+## 中文适配
+
+- 默认所有对用户可见的技能设计说明、建议、评审意见和交付说明使用中文。
+- 保留英文用于代码、命令、路径、配置键、API 字段名、类名、函数名、变量名、协议名、库名、工具名，以及必须原样保留的报错或日志。
+- 若该技能中的模板或固定指导语会直接展示给用户，优先改写为中文。
+
 ## Overview
 
 **Writing skills IS Test-Driven Development applied to process documentation.**
